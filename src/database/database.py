@@ -139,6 +139,12 @@ class Database:
         ''', (chat_id, user_id))
         self.conn.commit()
 
+    def get_ban(self, chat_id: int, user_id: int) -> bool:
+        self.cursor.execute('''
+            SELECT 1 FROM bans WHERE chat_id = ? AND user_id = ?
+        ''', (chat_id, user_id))
+        return self.cursor.fetchone() is not None
+
     def get_bans(self, chat_id: int) -> List[int]:
         self.cursor.execute('SELECT user_id FROM bans WHERE chat_id = ?', (chat_id,))
         return [row[0] for row in self.cursor.fetchall()]
